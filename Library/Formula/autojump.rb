@@ -11,27 +11,29 @@ class Autojump < Formula
   depends_on :python => "2.7"
 
   def install
-    inreplace 'bin/autojump.sh', ' /etc/profile.d/', " #{prefix}/etc/"
+    inreplace 'bin/autojump.sh', ' /etc/profile.d/', " #{prefix}/etc/profile.d/"
 
     bin.install 'bin/autojump'
     man1.install 'docs/autojump.1'
-    (prefix/'etc').install 'bin/autojump.sh', 'bin/autojump.bash', 'bin/autojump.zsh'
+    (prefix/'etc/profile.d').mkpath
+    (prefix/'etc/profile.d').install 'bin/autojump.sh', 'bin/autojump.bash', 'bin/autojump.zsh'
     zsh_completion.install 'bin/_j'
-    (prefix/'etc').install 'bin/autojump.fish' if build.head?
+    (prefix/'etc/profile.d').install 'bin/autojump.fish' if build.head?
   end
 
   def caveats;
     msg = <<-EOS.undent
-    Add the following line to your ~/.bash_profile or ~/.zshrc file (and remember
+    If `brew --prefix`/etc/profile.d is not sourced automatically, add
+    the following line to your ~/.bash_profile or ~/.zshrc file (and remember
     to source the file to update your current session):
-      [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
+      [[ -s `brew --prefix`/etc/profile.d/autojump.sh ]] && . `brew --prefix`/etc/profile.d/autojump.sh
     EOS
 
     if build.head?
       msg += <<-EOS.undent
 
       Add the following line to your ~/.config/fish/config.fish:
-        . /usr/local/Cellar/autojump/HEAD/etc/autojump.fish
+        . /usr/local/Cellar/autojump/HEAD/etc/profile.d/autojump.fish
       EOS
     end
 
