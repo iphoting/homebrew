@@ -7,6 +7,9 @@ class Autojump < Formula
 
   head 'https://github.com/joelthelion/autojump.git'
 
+  depends_on 'bash' =>  :recommended
+  depends_on :python => "2.7"
+
   def install
     inreplace 'bin/autojump.sh', ' /etc/profile.d/', " #{prefix}/etc/"
 
